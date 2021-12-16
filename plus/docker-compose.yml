@@ -1,0 +1,27 @@
+version: '3.6'
+
+services:
+  mongo:
+    image: 'mongo:4.2.18-rc0-bionic'
+    ports:
+      - '27017:27017'
+    expose:
+      - '27017/tcp'
+  go:
+    depends_on:
+      - mongo
+    image: 'golang:rc-alpine'
+    restart: always
+    volumes:
+      - ${PWD}:/golab
+    environment:
+      mongo_host: 'mongo'
+      port: 27017
+      db: "employee"
+      collection: "employee"
+    ports:
+      - '8080:8080'
+    expose:
+      - '8080/tcp'
+    working_dir: '/golab'
+    command: ["go", "run", "main.go"]
