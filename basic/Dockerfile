@@ -39,10 +39,13 @@ RUN apk update && \
     composer install && \
     chown nginx:nginx -R /usr/share/nginx/html/laravel
 
-COPY start.sh /usr/share/nginx/html
+COPY start.sh /usr/share/nginx/html/start.sh
 
+## For Development use only
 CMD ["php", "-S", "0.0.0.0:3000", "-t", "/usr/share/nginx/html/laravel/public"]
 
+## For production use, but seems a failure here
+# CMD ["/usr/share/nginx/html/start.sh"]
 
 
 
