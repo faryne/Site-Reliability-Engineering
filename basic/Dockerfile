@@ -1,5 +1,4 @@
 FROM nginx:1.21.4-alpine
-# FROM laravelsail/php74-composer:latest
 
 WORKDIR /usr/share/nginx/html
 
@@ -27,6 +26,7 @@ RUN apk update && \
         php7-fileinfo \
         php7-xmlwriter \
         php7-tokenizer \
+        php7-session \
         php7-json && \
     wget https://phar.phpunit.de/phpunit-9.phar -O /usr/local/bin/phpunit && \
     chmod +x /usr/local/bin/phpunit && \
@@ -37,7 +37,11 @@ RUN apk update && \
     /usr/local/bin/composer create-project --prefer-dist laravel/laravel && \
     cd laravel && \ 
     composer install && \
-    chown nginx:nginx -R laravel
+    chown nginx:nginx -R /usr/share/nginx/html/laravel
+
+COPY start.sh /usr/share/nginx/html
+
+CMD ["php", "-S", "0.0.0.0:3000", "-t", "/usr/share/nginx/html/laravel/public"]
 
 
 
